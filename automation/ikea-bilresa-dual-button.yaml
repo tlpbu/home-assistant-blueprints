@@ -53,9 +53,9 @@ blueprint:
       selector:
         action: {}
 
-    button1_long:
+    button1_long_press:
       name: Button 1 – Long Press (on press)
-      description: Action for Button 1 long press completion (long_release).
+      description: Action for Button 1 long press completion (long_press).
       default: []
       selector:
         action: {}
@@ -85,9 +85,9 @@ blueprint:
       selector:
         action: {}
 
-    button2_long:
+    button2_long_press:
       name: Button 2 – Long Press (on press)
-      description: Action for Button 2 long press completion (long_release).
+      description: Action for Button 2 long press completion (long_press).
       default: []
       selector:
         action: {}
@@ -143,7 +143,7 @@ action:
           - condition: template
             value_template: >
               {{ trigger_id == 'button1' and press_type == 'long_press' }}
-        sequence: !input button1_long
+        sequence: !input button1_long_press
 
       - conditions:
           - condition: template
@@ -171,7 +171,7 @@ action:
           - condition: template
             value_template: >
               {{ trigger_id == 'button2' and press_type == 'long_press' }}
-        sequence: !input button2_long
+        sequence: !input button2_long_press
 
       - conditions:
           - condition: template
