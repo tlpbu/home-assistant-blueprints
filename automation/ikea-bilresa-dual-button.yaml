@@ -4,8 +4,8 @@ blueprint:
   author: Skaronator
   description: >
     Full-featured automation for the IKEA BILRESA dual-button remote.
-    Supports single press, double press, and long press for both buttons.
-    Version 1.2.0
+    Supports single press, double press, and long press and holding for both buttons.
+    Version 1.2.1
   domain: automation
   source_url: https://raw.githubusercontent.com/Skaronator/home-assistant-blueprints/refs/heads/main/automation/ikea-bilresa-dual-button.yaml
   homeassistant:
