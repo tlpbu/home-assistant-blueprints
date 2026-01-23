@@ -27,6 +27,7 @@ blueprint:
 
     ### 2.0.0
       - Added support for selecting multiple entities for each button. Allowing to have multiple remotes triggering the same actions.
+      - See [these upgrade notes](https://community.home-assistant.io/t/ikea-bilresa-dual-button-remote/965815/28?u=skaronator) for migrating existing automations using this blueprint.
     ### 1.2.2
       - Improved descriptions and documentation.
     ### 1.2.1

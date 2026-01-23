@@ -1,0 +1,332 @@
+mode: single
+blueprint:
+  name: IKEA BILRESA Scroll Wheel
+  author: Skaronator
+  description: >
+    Full-featured automation for the IKEA BILRESA scroll wheel remote.
+    Supports single press, double press, and long press for both buttons.
+    Version 1.0.0
+  domain: automation
+  source_url: https://raw.githubusercontent.com/Skaronator/home-assistant-blueprints/refs/heads/main/automation/ikea-bilresa-scroll-wheel.yaml
+  homeassistant:
+    min_version: 2025.12.0
+
+  input:
+    setup:
+      name: Button Event Entities Setup
+      description: >
+        Select the event entities for all 9 buttons on the IKEA BILRESA scroll wheel.
+      input:
+
+        button1_event:
+          name: Button 1 – Event Entity
+          description: Select the event entity for Button 1
+          selector: &button_event_selector
+            entity:
+              filter:
+                integration: matter
+                domain: event
+                device_class: button
+
+        button2_event:
+          name: Button 2 – Event Entity
+          description: Select the event entity for Button 2
+          selector: *button_event_selector
+
+        button3_event:
+          name: Button 3 – Event Entity
+          description: Select the event entity for Button 3
+          selector: *button_event_selector
+
+        button4_event:
+          name: Button 4 – Event Entity
+          description: Select the event entity for Button 4
+          selector: *button_event_selector
+
+        button5_event:
+          name: Button 5 – Event Entity
+          description: Select the event entity for Button 5
+          selector: *button_event_selector
+
+        button6_event:
+          name: Button 6 – Event Entity
+          description: Select the event entity for Button 6
+          selector: *button_event_selector
+
+        button7_event:
+          name: Button 7 – Event Entity
+          description: Select the event entity for Button 7
+          selector: *button_event_selector
+
+        button8_event:
+          name: Button 8 – Event Entity
+          description: Select the event entity for Button 8
+          selector: *button_event_selector
+
+        button9_event:
+          name: Button 9 – Event Entity
+          description: Select the event entity for Button 9
+          selector: *button_event_selector
+
+    first_dot:
+      name: First Dot Actions
+      description: Actions for the first dot.
+      collapsed: true
+      input:
+        first_scroll_left:
+          name: Scroll Left
+          description: Action for scrolling left.
+          default: []
+          selector:
+            action: {}
+        first_scroll_right:
+          name: Scroll Right
+          description: Action for scrolling right.
+          default: []
+          selector:
+            action: {}
+        first_single:
+          name: Single Press
+          description: Action for Button 1 single press (multi_press_1).
+          default: []
+          selector:
+            action: {}
+        first_double:
+          name: Double Press
+          description: Action for Button 1 double press (multi_press_2).
+          default: []
+          selector:
+            action: {}
+        first_long_press:
+          name: Long Press (on press)
+          description: Action for Button 1 long press completion (long_press).
+          default: []
+          selector:
+            action: {}
+        first_long_release:
+          name: Long Press (on release)
+          description: Action for Button 1 long press completion (long_release).
+          default: []
+          selector:
+            action: {}
+
+    second_dot:
+      name: Second Dot Actions
+      description: Actions for the second dot.
+      collapsed: true
+      input:
+        second_scroll_left:
+          name: Scroll Left
+          description: Action for scrolling left.
+          default: []
+          selector:
+            action: {}
+        second_scroll_right:
+          name: Scroll Right
+          description: Action for scrolling right.
+          default: []
+          selector:
+            action: {}
+        second_single:
+          name: Single Press
+          description: Action for Button 1 single press (multi_press_1).
+          default: []
+          selector:
+            action: {}
+        second_double:
+          name: Double Press
+          description: Action for Button 1 double press (multi_press_2).
+          default: []
+          selector:
+            action: {}
+        second_long_press:
+          name: Long Press (on press)
+          description: Action for Button 1 long press completion (long_press).
+          default: []
+          selector:
+            action: {}
+        second_long_release:
+          name: Long Press (on release)
+          description: Action for Button 1 long press completion (long_release).
+          default: []
+          selector:
+            action: {}
+
+    thrid_dot:
+      name: Thrid Dot Actions
+      description: Actions for the thrid dot.
+      collapsed: true
+      input:
+        thrid_scroll_left:
+          name: Scroll Left
+          description: Action for scrolling left.
+          default: []
+          selector:
+            action: {}
+        thrid_scroll_right:
+          name: Scroll Right
+          description: Action for scrolling right.
+          default: []
+          selector:
+            action: {}
+        thrid_single:
+          name: Single Press
+          description: Action for Button 1 single press (multi_press_1).
+          default: []
+          selector:
+            action: {}
+        thrid_double:
+          name: Double Press
+          description: Action for Button 1 double press (multi_press_2).
+          default: []
+          selector:
+            action: {}
+        thrid_long_press:
+          name: Long Press (on press)
+          description: Action for Button 1 long press completion (long_press).
+          default: []
+          selector:
+            action: {}
+        thrid_long_release:
+          name: Long Press (on release)
+          description: Action for Button 1 long press completion (long_release).
+          default: []
+          selector:
+            action: {}
+
+# ===================================================================
+# AUTOMATION LOGIC
+# ===================================================================
+
+trigger:
+  - platform: state
+    id: button1
+    entity_id: !input button1_event
+  - platform: state
+    id: button2
+    entity_id: !input button2_event
+  - platform: state
+    id: button3
+    entity_id: !input button3_event
+  - platform: state
+    id: button4
+    entity_id: !input button4_event
+  - platform: state
+    id: button5
+    entity_id: !input button5_event
+  - platform: state
+    id: button6
+    entity_id: !input button6_event
+  - platform: state
+    id: button7
+    entity_id: !input button7_event
+  - platform: state
+    id: button8
+    entity_id: !input button8_event
+  - platform: state
+    id: button9
+    entity_id: !input button9_event
+
+condition: []
+
+action:
+  - variables:
+      trigger_id: "{{ trigger.id }}"
+      press_type: "{{ trigger.to_state.attributes.event_type }}"
+
+  - choose:
+      # first dot
+      - conditions:
+          - condition: template
+            value_template: >
+              {{ trigger_id == 'button1' }}
+        sequence: !input first_scroll_left
+      - conditions:
+          - condition: template
+            value_template: >
+              {{ trigger_id == 'button2' }}
+        sequence: !input first_scroll_right
+      - conditions:
+          - condition: template
+            value_template: >
+              {{ trigger_id == 'button3' and press_type == 'multi_press_1' }}
+        sequence: !input first_single
+      - conditions:
+          - condition: template
+            value_template: >
+              {{ trigger_id == 'button3' and press_type == 'multi_press_2' }}
+        sequence: !input first_double
+      - conditions:
+          - condition: template
+            value_template: >
+              {{ trigger_id == 'button3' and press_type == 'long_press' }}
+        sequence: !input first_long_press
+      - conditions:
+          - condition: template
+            value_template: >
+              {{ trigger_id == 'button3' and press_type == 'long_release' }}
+        sequence: !input first_long_release
+
+      # second dot
+      - conditions:
+          - condition: template
+            value_template: >
+              {{ trigger_id == 'button4' }}
+        sequence: !input second_scroll_left
+      - conditions:
+          - condition: template
+            value_template: >
+              {{ trigger_id == 'button5' }}
+        sequence: !input second_scroll_right
+      - conditions:
+          - condition: template
+            value_template: >
+              {{ trigger_id == 'button6' and press_type == 'multi_press_1' }}
+        sequence: !input second_single
+      - conditions:
+          - condition: template
+            value_template: >
+              {{ trigger_id == 'button6' and press_type == 'multi_press_2' }}
+        sequence: !input second_double
+      - conditions:
+          - condition: template
+            value_template: >
+              {{ trigger_id == 'button6' and press_type == 'long_press' }}
+        sequence: !input second_long_press
+      - conditions:
+          - condition: template
+            value_template: >
+              {{ trigger_id == 'button6' and press_type == 'long_release' }}
+        sequence: !input second_long_release
+
+        # thrid dot
+      - conditions:
+          - condition: template
+            value_template: >
+              {{ trigger_id == 'button7' }}
+        sequence: !input thrid_scroll_left
+      - conditions:
+          - condition: template
+            value_template: >
+              {{ trigger_id == 'button8' }}
+        sequence: !input thrid_scroll_right
+      - conditions:
+          - condition: template
+            value_template: >
+              {{ trigger_id == 'button9' and press_type == 'multi_press_1' }}
+        sequence: !input thrid_single
+      - conditions:
+          - condition: template
+            value_template: >
+              {{ trigger_id == 'button9' and press_type == 'multi_press_2' }}
+        sequence: !input thrid_double
+      - conditions:
+          - condition: template
+            value_template: >
+              {{ trigger_id == 'button9' and press_type == 'long_press' }}
+        sequence: !input thrid_long_press
+      - conditions:
+          - condition: template
+            value_template: >
+              {{ trigger_id == 'button9' and press_type == 'long_release' }}
+        sequence: !input thrid_long_release
