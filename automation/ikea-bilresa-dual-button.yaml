@@ -5,7 +5,7 @@ blueprint:
   description: |
     # IKEA BILRESA Dual Button Remote Automation
 
-    ## Current Version 1.2.2
+    ## Current Version 2.0.0
 
     ## Features
 
@@ -25,6 +25,8 @@ blueprint:
 
     ## Changelog
 
+    ### 2.0.0
+      - Added support for selecting multiple entities for each button. Allowing to have multiple remotes triggering the same actions.
     ### 1.2.2
       - Improved descriptions and documentation.
     ### 1.2.1
@@ -60,6 +62,7 @@ blueprint:
             Select the event entity for Button 1
           selector: &button_event_selector
             entity:
+              multiple: true
               filter:
                 integration: matter
                 domain: event
