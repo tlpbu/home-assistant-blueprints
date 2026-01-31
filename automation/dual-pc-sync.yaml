@@ -1,0 +1,275 @@
+mode: queued
+blueprint:
+  name: Dual PC Sync
+  author: Skaronator
+  description: |
+    # Dual PC Sync workspace automation
+
+    ## Current Version 1.0.0
+
+    ## Features
+
+    Automation blueprint for a dual-PC setup sharing one workspace (lights, monitors, audio, and more).
+
+    ### Core logic
+
+    * **PC 1 on/off** actions (based on PC 1 power draw)
+    * **PC 2 on/off** actions (based on PC 2 power draw)
+    * **Workspace active**: triggers when the *first* PC turns on (0 -> 1 active)
+    * **Workspace inactive**: triggers when the *last* PC turns off (1 -> 0 active)
+
+    ### How it works
+
+    This blueprint monitors two power sensors and uses configurable thresholds (Watts) to decide if each PC is on.
+
+    Optional hysteresis for each PC (on and off) makes sure the power stays above/below the threshold for a set duration before triggering, to avoid flicker during spikes.
+
+    ### Configuration Options
+
+    * Power sensors for PC 1 and PC 2
+    * Power thresholds for each PC (Watts)
+    * Hysteresis durations per PC (on and off)
+
+    ## Changelog
+
+    ### 1.0.0
+      - Initial release with support for per-PC and global actions.
+
+    ## Support and Feedback
+
+    * GitHub: [Skaronator/home-assistant-blueprints](https://github.com/Skaronator/home-assistant-blueprints)
+
+    Thank you for using this blueprint! Your feedback and contributions are welcome. 💚
+  domain: automation
+  source_url: https://raw.githubusercontent.com/Skaronator/home-assistant-blueprints/refs/heads/main/automation/dual-pc-sync.yaml
+  input:
+    setup:
+      name: ⚙️ Sensor Setup
+      description: Configure the power sensors and thresholds for your computers.
+      collapsed: false
+      input:
+        pc1_power_sensor:
+          name: PC 1 Power Sensor
+          description: Select the sensor measuring wattage for PC 1.
+          selector:
+            entity:
+              domain: sensor
+              device_class: power
+        pc1_threshold:
+          name: PC 1 Threshold
+          description: Power draw (Watts) above which PC 1 is considered on.
+          default: 10
+          selector:
+            number:
+              min: 1
+              max: 2000
+              unit_of_measurement: W
+              mode: box
+        pc1_hysteresis_on:
+          name: PC 1 Hysteresis (On)
+          description: Time (seconds) PC 1 power must remain above the threshold before triggering on actions.
+          default: 1
+          selector:
+            number:
+              min: 0
+              max: 30
+              step: 0.1
+              unit_of_measurement: s
+              mode: slider
+        pc1_hysteresis_off:
+          name: PC 1 Hysteresis (Off)
+          description: Time (seconds) PC 1 power must remain below the threshold before triggering off actions.
+          default: 2
+          selector:
+            number:
+              min: 0
+              max: 30
+              step: 0.1
+              unit_of_measurement: s
+              mode: slider
+        pc2_power_sensor:
+          name: PC 2 Power Sensor
+          description: Select the sensor measuring wattage for PC 2.
+          selector:
+            entity:
+              domain: sensor
+              device_class: power
+        pc2_threshold:
+          name: PC 2 Threshold
+          description: Power draw (Watts) above which PC 2 is considered on.
+          default: 10
+          selector:
+            number:
+              min: 1
+              max: 2000
+              unit_of_measurement: W
+              mode: box
+        pc2_hysteresis_on:
+          name: PC 2 Hysteresis (On)
+          description: Time (seconds) PC 2 power must remain above the threshold before triggering on actions.
+          default: 1
+          selector:
+            number:
+              min: 0
+              max: 30
+              step: 0.1
+              unit_of_measurement: s
+              mode: slider
+        pc2_hysteresis_off:
+          name: PC 2 Hysteresis (Off)
+          description: Time (seconds) PC 2 power must remain below the threshold before triggering off actions.
+          default: 2
+          selector:
+            number:
+              min: 0
+              max: 30
+              step: 0.1
+              unit_of_measurement: s
+              mode: slider
+
+    pc1_config:
+      name: 1️⃣ PC 1 Actions
+      description: Define actions specific to PC 1.
+      collapsed: true
+      input:
+        action_pc1_on:
+          name: PC 1 Turns ON
+          description: Action when PC 1 wakes up/turns on.
+          default: []
+          selector:
+            action: {}
+        action_pc1_off:
+          name: PC 1 Turns OFF
+          description: Action when PC 1 sleeps/shuts down.
+          default: []
+          selector:
+            action: {}
+
+    pc2_config:
+      name: 2️⃣ PC 2 Actions
+      description: Define actions specific to PC 2.
+      collapsed: true
+      input:
+        action_pc2_on:
+          name: PC 2 Turns ON
+          description: Action when PC 2 wakes up/turns on.
+          default: []
+          selector:
+            action: {}
+        action_pc2_off:
+          name: PC 2 Turns OFF
+          description: Action when PC 2 sleeps/shuts down.
+          default: []
+          selector:
+            action: {}
+
+    global_config:
+      name: 🌐 Global Actions
+      description: Define actions for the whole workspace (monitors, lights, etc).
+      collapsed: true
+      input:
+        action_global_on:
+          name: Workspace Active (Global ON)
+          description: Runs when ANY PC turns on (and the other was off).
+          default: []
+          selector:
+            action: {}
+        action_global_off:
+          name: Workspace Inactive (Global OFF)
+          description: Runs when ALL PCs have turned off.
+          default: []
+          selector:
+            action: {}
+
+trigger:
+  # PC 1 Triggers
+  - platform: numeric_state
+    entity_id: !input pc1_power_sensor
+    above: !input pc1_threshold
+    for:
+      seconds: !input pc1_hysteresis_on
+    id: pc1_on
+  - platform: numeric_state
+    entity_id: !input pc1_power_sensor
+    below: !input pc1_threshold
+    for:
+      seconds: !input pc1_hysteresis_off
+    id: pc1_off
+    
+  # PC 2 Triggers
+  - platform: numeric_state
+    entity_id: !input pc2_power_sensor
+    above: !input pc2_threshold
+    for:
+      seconds: !input pc2_hysteresis_on
+    id: pc2_on
+  - platform: numeric_state
+    entity_id: !input pc2_power_sensor
+    below: !input pc2_threshold
+    for:
+      seconds: !input pc2_hysteresis_off
+    id: pc2_off
+
+action:
+  - variables:
+      pc1_sensor: !input pc1_power_sensor
+      pc2_sensor: !input pc2_power_sensor
+      pc1_limit: !input pc1_threshold
+      pc2_limit: !input pc2_threshold
+
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: pc1_on
+        sequence:
+          - alias: Run PC1 On Actions
+            sequence: !input action_pc1_on
+          - if:
+              - condition: numeric_state
+                entity_id: !input pc2_power_sensor
+                below: !input pc2_threshold
+            then:
+              - alias: Run Global On Actions
+                sequence: !input action_global_on
+
+      - conditions:
+          - condition: trigger
+            id: pc1_off
+        sequence:
+          - alias: Run PC1 Off Actions
+            sequence: !input action_pc1_off
+          - if:
+              - condition: numeric_state
+                entity_id: !input pc2_power_sensor
+                below: !input pc2_threshold
+            then:
+              - alias: Run Global Off Actions
+                sequence: !input action_global_off
+
+      - conditions:
+          - condition: trigger
+            id: pc2_on
+        sequence:
+          - alias: Run PC2 On Actions
+            sequence: !input action_pc2_on
+          - if:
+              - condition: numeric_state
+                entity_id: !input pc1_power_sensor
+                below: !input pc1_threshold
+            then:
+              - alias: Run Global On Actions
+                sequence: !input action_global_on
+
+      - conditions:
+          - condition: trigger
+            id: pc2_off
+        sequence:
+          - alias: Run PC2 Off Actions
+            sequence: !input action_pc2_off
+          - if:
+              - condition: numeric_state
+                entity_id: !input pc1_power_sensor
+                below: !input pc1_threshold
+            then:
+              - alias: Run Global Off Actions
+                sequence: !input action_global_off
