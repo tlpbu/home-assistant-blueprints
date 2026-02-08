@@ -65,7 +65,6 @@ blueprint:
             entity:
               multiple: true
               filter:
-                integration: matter
                 domain: event
                 device_class: button
 
